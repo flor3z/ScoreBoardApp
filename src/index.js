@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GameCard from './GameCard.js';
+import App from './App';
 import './style.css';
 
-ReactDOM.render(<GameCard />, document.querySelector('#root'));
+ReactDOM.render(<App />, document.querySelector('#root'));

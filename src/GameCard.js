@@ -33,20 +33,24 @@ class GameCard extends React.Component {
 
   incrementScore(num) {
     const teamScoreNum = 'score' + num;
-
-    this.setState(
-      {
+    if (this.state[teamScoreNum] === this.state.maxScore) {
+      this.setState({
+        winner: true,
+      });
+    } else {
+      this.setState({
         [teamScoreNum]: Math.min(
           this.state[teamScoreNum] + 1,
           this.state.maxScore
         ),
-      },
-      () => {
-        if (this.state[teamScoreNum] === this.state.maxScore) {
-          this.setState({ winner: [teamScoreNum] });
-        }
-      }
-    );
+      });
+    }
+    // () => {
+    //   if (this.state[teamScoreNum] === this.state.maxScore) {
+    //     this.setState({ winner: [teamScoreNum] });
+    //   }
+    // }
+
     // if ([teamScoreNum] === this.state.maxScore) {
     //   return this.setState({ winner: true });
     // }
@@ -77,7 +81,7 @@ class GameCard extends React.Component {
   onSubmitMaxScore(event) {
     if (event.key === 'Enter') {
       const scoreValue = event.target.value;
-      console.log(scoreValue);
+      // console.log(scoreValue);
       this.setState({
         maxScore: Number(scoreValue),
       });
@@ -88,7 +92,7 @@ class GameCard extends React.Component {
     //this needs fixing!!!!!!!!!!!!!!!!!!! figure out how to pass text from parent to child, and back up to parent!
 
     const { value } = e.target;
-    console.log(team, value);
+    // console.log(team, value);
 
     this.setState({
       [`team${team}`]: value,
@@ -99,39 +103,45 @@ class GameCard extends React.Component {
   render() {
     return (
       <div>
-        <TeamCard
-          enterPress={this.onEnterPress}
-          maxScore={this.state.maxScore}
-          score={this.state.score1}
-          team={1}
-          name={this.state.team1}
-          displayName={this.state.displayName1}
-          addPoints={this.incrementScore}
-          subtractPoints={this.decrementScore}
-          onTeamNameChange={this.onTeamNameChange}
-        />
-        <TeamCard
-          enterPress={this.onEnterPress}
-          maxScore={this.state.maxScore}
-          score={this.state.score2}
-          team={2}
-          name={this.state.team2}
-          displayName={this.state.displayName2}
-          addPoints={this.incrementScore}
-          subtractPoints={this.decrementScore}
-          onTeamNameChange={this.onTeamNameChange}
-        />
-        <h2>
-          {this.state.maxScore <= 0
-            ? 'Enter max points for game'
-            : `Game will go up to ${this.state.maxScore} points`}
-        </h2>
-        <input
-          type="number"
-          placeholder="Input Max Point Limit.."
-          onKeyPress={this.onSubmitMaxScore}
-          // onChange={this.onInputChange}
-        />
+        <div className="team-cards-container">
+          <TeamCard
+            enterPress={this.onEnterPress}
+            maxScore={this.state.maxScore}
+            score={this.state.score1}
+            winner={this.state.winner}
+            team={1}
+            name={this.state.team1}
+            displayName={this.state.displayName1}
+            addPoints={this.incrementScore}
+            subtractPoints={this.decrementScore}
+            onTeamNameChange={this.onTeamNameChange}
+          />
+          <TeamCard
+            enterPress={this.onEnterPress}
+            maxScore={this.state.maxScore}
+            score={this.state.score2}
+            winner={this.state.winner}
+            team={2}
+            name={this.state.team2}
+            displayName={this.state.displayName2}
+            addPoints={this.incrementScore}
+            subtractPoints={this.decrementScore}
+            onTeamNameChange={this.onTeamNameChange}
+          />
+        </div>
+        <div className="score-limit-container">
+          <h2>
+            {this.state.maxScore <= 0
+              ? 'Enter max points for game'
+              : `Game will go up to ${this.state.maxScore} points`}
+          </h2>
+          <input
+            type="number"
+            placeholder="Score Limit.."
+            onKeyPress={this.onSubmitMaxScore}
+            // onChange={this.onInputChange}
+          />
+        </div>
       </div>
     );
   }
