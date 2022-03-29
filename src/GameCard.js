@@ -30,21 +30,29 @@ class GameCard extends React.Component {
   //     return `Team ${team[2]} wins!`
   //   }
   // }
+  //1 compared current score with max score (CS: 0 | MS: 1)
 
+  //2 set the winner if CS = MS
+
+  //a set winnner
+
+  //b increment score if MS hasnt been reached
+  //RUN THROUGH THE FUNCTION BELOW AGAIN AND AGAIN
   incrementScore(num) {
     const teamScoreNum = 'score' + num;
-    if (this.state[teamScoreNum] === this.state.maxScore) {
+    const incrementedScore = this.state[teamScoreNum] + 1;
+    console.log(incrementedScore, 'incremented score');
+    if (incrementedScore === this.state.maxScore) {
       this.setState({
         winner: true,
+        [teamScoreNum]: incrementedScore,
       });
     } else {
       this.setState({
-        [teamScoreNum]: Math.min(
-          this.state[teamScoreNum] + 1,
-          this.state.maxScore
-        ),
+        [teamScoreNum]: Math.min(incrementedScore, this.state.maxScore),
       });
     }
+    // console.log(this.state[teamScoreNum]);
     // () => {
     //   if (this.state[teamScoreNum] === this.state.maxScore) {
     //     this.setState({ winner: [teamScoreNum] });
