@@ -19,7 +19,7 @@ class GameCard extends React.Component {
     this.incrementScore = this.incrementScore.bind(this);
     this.decrementScore = this.decrementScore.bind(this);
     this.onTeamNameChange = this.onTeamNameChange.bind(this);
-    this.onEnterPress = this.onEnterPress.bind(this);
+    // this.onEnterPress = this.onEnterPress.bind(this);
     this.onSubmitMaxScore = this.onSubmitMaxScore.bind(this);
   }
 
@@ -70,21 +70,15 @@ class GameCard extends React.Component {
     this.setState({
       [teamScoreNum]: Math.max(0, this.state[teamScoreNum] - 1),
     });
-
-    // } else {
-    //   this.setState({
-    //     [teamName]: this.state[teamName] - 1,
-    //   });
-    // }
   }
   //The Key Press event is being shown, however not sure how to display Input text on screen from the Enter key press??
-  onEnterPress = (event, teamNum) => {
-    if (event.key === 'Enter') {
-      this.setState({
-        [`displayName${teamNum}`]: this.state[`team${teamNum}`],
-      });
-    }
-  };
+  // onEnterPress = (event, teamNum) => {
+  //   if (event.key === 'Enter') {
+  //     this.setState({
+  //       [`displayName${teamNum}`]: this.state[`team${teamNum}`],
+  //     });
+  //   }
+  // };
 
   onSubmitMaxScore(event) {
     if (event.key === 'Enter') {
@@ -97,23 +91,26 @@ class GameCard extends React.Component {
   }
   //How do i get the input value to display as the max score value?
   onTeamNameChange(team, e) {
-    //this needs fixing!!!!!!!!!!!!!!!!!!! figure out how to pass text from parent to child, and back up to parent!
+    console.log(this.state[`team${team}`]);
+    //this needs fixing!!!!!!!!!!!!!!!!!!! figure out how to pass text from parent to child, and back up to parent! --(callback)
+    //create Enter Key condition to display input team name only when Enter key is pressed//
+    if (e.key === 'Enter') {
+      const { value } = e.target;
 
-    const { value } = e.target;
-    // console.log(team, value);
+      this.setState({
+        [`displayName${team}`]: value,
+      });
 
-    this.setState({
-      [`team${team}`]: value,
-    });
+      e.target.value = '';
+    }
   }
-  //I have to make a function in this parent component, pass it into the TeamCard component (child) then pull the data I want (current teams points)
-  //The pass it back up to the parent and change state to render the files again.
+
   render() {
     return (
       <div>
         <div className="team-cards-container">
           <TeamCard
-            enterPress={this.onEnterPress}
+            // enterPress={this.onEnterPress}
             maxScore={this.state.maxScore}
             score={this.state.score1}
             winner={this.state.winner}
@@ -125,7 +122,7 @@ class GameCard extends React.Component {
             onTeamNameChange={this.onTeamNameChange}
           />
           <TeamCard
-            enterPress={this.onEnterPress}
+            // enterPress={this.onEnterPress}
             maxScore={this.state.maxScore}
             score={this.state.score2}
             winner={this.state.winner}
@@ -147,7 +144,6 @@ class GameCard extends React.Component {
             type="number"
             placeholder="Score Limit.."
             onKeyPress={this.onSubmitMaxScore}
-            // onChange={this.onInputChange}
           />
         </div>
       </div>

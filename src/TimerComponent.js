@@ -20,7 +20,7 @@ export default class TimerComponent extends React.Component {
   }
 
   onTimerToggle() {
-    //I want the interval to deduct from the total time every second.
+    //Inital if statement means timer has PAUSED (!isPaused == True)//
     if (!this.state.isPaused) {
       this.timer = setInterval(() => {
         if (this.state.seconds === 0 && this.state.minutes === 0) {
@@ -40,11 +40,7 @@ export default class TimerComponent extends React.Component {
           });
         }
       }, 1000);
-
-      // clearInterval(this.timer); did not need this afterall? I thought I would need to clear interval within inital If statement...
-      // after testing, I realized i did not need too.
     }
-    //Find a way to make this reset to 59 instead of going to the negative numbers
 
     //I want to make one BUTTON with both Pause and Play functionality...figured out the play part, not yet the pause...
     // UPDATE --- I THINK I FIGURED IT OUT!
@@ -65,8 +61,7 @@ export default class TimerComponent extends React.Component {
 
     clearInterval(this.timer);
   }
-  // need to figure out how to clear the interval...pause the countdown and keep it there
-  //Update --- figured this out!
+
   render() {
     const playOrPause = this.state.isPaused === false ? 'Play' : 'Pause';
     return (
