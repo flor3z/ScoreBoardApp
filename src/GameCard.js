@@ -1,5 +1,6 @@
 import React from 'react';
 import TeamCard from './TeamCard.js';
+import GameResetModal from './GameResetModal.js';
 
 class GameCard extends React.Component {
   constructor(props) {
@@ -7,6 +8,7 @@ class GameCard extends React.Component {
 
     this.state = {
       winner: null,
+      show: true,
       maxScore: 0,
       score1: 0,
       score2: 0,
@@ -21,27 +23,13 @@ class GameCard extends React.Component {
     this.onTeamNameChange = this.onTeamNameChange.bind(this);
     // this.onEnterPress = this.onEnterPress.bind(this);
     this.onSubmitMaxScore = this.onSubmitMaxScore.bind(this);
+    this.onGameReset = this.onGameReset.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
-  // winningTeam() {
-  //   if (this.state.score1 === this.state.maxScore) {
-  //     return `Team ${team[1]} wins!`
-  //   } else if (this.state.score2 === this.state.maxScore){
-  //     return `Team ${team[2]} wins!`
-  //   }
-  // }
-  //1 compared current score with max score (CS: 0 | MS: 1)
-
-  //2 set the winner if CS = MS
-
-  //a set winnner
-
-  //b increment score if MS hasnt been reached
-  //RUN THROUGH THE FUNCTION BELOW AGAIN AND AGAIN
   incrementScore(num) {
     const teamScoreNum = 'score' + num;
     const incrementedScore = this.state[teamScoreNum] + 1;
-    console.log(incrementedScore, 'incremented score');
     if (incrementedScore === this.state.maxScore) {
       this.setState({
         winner: true,
@@ -52,16 +40,6 @@ class GameCard extends React.Component {
         [teamScoreNum]: Math.min(incrementedScore, this.state.maxScore),
       });
     }
-    // console.log(this.state[teamScoreNum]);
-    // () => {
-    //   if (this.state[teamScoreNum] === this.state.maxScore) {
-    //     this.setState({ winner: [teamScoreNum] });
-    //   }
-    // }
-
-    // if ([teamScoreNum] === this.state.maxScore) {
-    //   return this.setState({ winner: true });
-    // }
   }
 
   decrementScore(num) {
@@ -71,14 +49,6 @@ class GameCard extends React.Component {
       [teamScoreNum]: Math.max(0, this.state[teamScoreNum] - 1),
     });
   }
-  //The Key Press event is being shown, however not sure how to display Input text on screen from the Enter key press??
-  // onEnterPress = (event, teamNum) => {
-  //   if (event.key === 'Enter') {
-  //     this.setState({
-  //       [`displayName${teamNum}`]: this.state[`team${teamNum}`],
-  //     });
-  //   }
-  // };
 
   onSubmitMaxScore(event) {
     if (event.key === 'Enter') {
@@ -89,9 +59,8 @@ class GameCard extends React.Component {
       });
     }
   }
-  //How do i get the input value to display as the max score value?
+
   onTeamNameChange(team, e) {
-    console.log(this.state[`team${team}`]);
     //this needs fixing!!!!!!!!!!!!!!!!!!! figure out how to pass text from parent to child, and back up to parent! --(callback)
     //create Enter Key condition to display input team name only when Enter key is pressed//
     if (e.key === 'Enter') {
@@ -104,13 +73,43 @@ class GameCard extends React.Component {
       e.target.value = '';
     }
   }
+  ///Modal content within comment slashes///////////////////////
+
+  handleCloseModal() {
+    this.setState({
+      show: false,
+    });
+  }
+
+  onGameReset() {
+    if (this.state.winner) {
+      this.setState({
+        winner: null,
+        maxScore: 0,
+        score1: 0,
+        score2: 0,
+        team1: 'Home',
+        team2: 'Guest',
+        displayName1: '',
+        displayName2: '',
+      });
+    }
+  }
+  ///////////////////////////////////////////////////////////////////
 
   render() {
     return (
       <div>
+        {this.state.winner ? (
+          <GameResetModal
+            show={this.state.show}
+            winner={this.state.winner}
+            handleCloseModal={this.handleCloseModal}
+            gameReset={this.onGameReset}
+          />
+        ) : null}
         <div className="team-cards-container">
           <TeamCard
-            // enterPress={this.onEnterPress}
             maxScore={this.state.maxScore}
             score={this.state.score1}
             winner={this.state.winner}
@@ -122,7 +121,6 @@ class GameCard extends React.Component {
             onTeamNameChange={this.onTeamNameChange}
           />
           <TeamCard
-            // enterPress={this.onEnterPress}
             maxScore={this.state.maxScore}
             score={this.state.score2}
             winner={this.state.winner}

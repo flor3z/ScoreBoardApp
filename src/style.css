@@ -132,6 +132,7 @@ body {
   animation-timing-function: ease-out;
 }
 
+
 .time {
   display: flex;
   justify-content: center;
@@ -143,12 +144,13 @@ body {
 .time-controls {
   display: flex;
   justify-content: center;
-  /* position: relative; */
-  /* top: 40%;
-  left: 50%; */
-  /* transform: translate(-50%, -50%); */
   text-align: center;
 }
+
+.time-controls button {
+  width: 7.65rem;
+}
+
 /* All Button Section with Effects///////////////// */
 .btn {
   border-radius: 10rem;
