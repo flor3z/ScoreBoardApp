@@ -82,10 +82,10 @@ export default class TimerComponent extends React.Component {
           </h1>
         </div>
         <div className="time-controls">
-          <button className="btn" onClick={this.onTimerToggle}>
+          <button className="butn" onClick={this.onTimerToggle}>
             {playOrPause}
           </button>
-          <button className="btn" onClick={this.onClickReset}>
+          <button className="butn" onClick={this.onClickReset}>
             Reset
           </button>
         </div>

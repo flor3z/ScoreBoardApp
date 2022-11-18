@@ -7,10 +7,7 @@ class TeamCard extends React.Component {
   render() {
     const winnerClass = this.props.winner ? 'victory' : null;
     return (
-      <div
-        className="team-content"
-        // onKeyPress={(e) => this.props.enterPress(e, this.props.team)}
-      >
+      <div className="team-content">
         <h1
           className={
             this.props.score === this.props.maxScore ? winnerClass : null
@@ -20,26 +17,27 @@ class TeamCard extends React.Component {
         </h1>
 
         <button
-          className="btn button-increment"
+          className="butn button-increment"
           onClick={() => this.props.addPoints(this.props.team)}
         >
           +
         </button>
         <button
-          className="btn button-decrement"
+          className="butn button-decrement"
           onClick={() => this.props.subtractPoints(this.props.team)}
         >
           -
         </button>
         <br />
         <input
+          className="team-content-input"
           placeholder="Team Name"
           type="text"
           name={this.props.displayName}
           onKeyPress={(e) => this.props.onTeamNameChange(this.props.team, e)}
         />
         <br />
-        <span>
+        <span className="team-name">
           {this.props.displayName.length === 0
             ? this.props.name
             : this.props.displayName}
