@@ -2,6 +2,11 @@ import React from 'react';
 import TeamCard from './TeamCard.js';
 import GameResetModal from './GameResetModal.js';
 
+const DEFAULT_START_TIME = {
+  minutes: 25,
+  seconds: 0,
+};
+
 class GameCard extends React.Component {
   constructor(props) {
     super(props);
@@ -16,15 +21,18 @@ class GameCard extends React.Component {
       team2: 'Guest',
       displayName1: '',
       displayName2: '',
+      minutes: DEFAULT_START_TIME.minutes,
+      seconds: DEFAULT_START_TIME.seconds,
+      isPaused: false,
     };
-    //Set winner from false to true, depending on if the score has reached maxScore
     this.incrementScore = this.incrementScore.bind(this);
     this.decrementScore = this.decrementScore.bind(this);
     this.onTeamNameChange = this.onTeamNameChange.bind(this);
-    // this.onEnterPress = this.onEnterPress.bind(this);
     this.onSubmitMaxScore = this.onSubmitMaxScore.bind(this);
     this.onGameReset = this.onGameReset.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.onTimerToggle = this.onTimerToggle.bind(this);
+    this.onClickReset = this.onClickReset.bind(this);
   }
 
   incrementScore(num) {
@@ -44,7 +52,6 @@ class GameCard extends React.Component {
 
   decrementScore(num) {
     const teamScoreNum = 'score' + num;
-    // if (this.state[teamScoreNum] === 0) {
     this.setState({
       [teamScoreNum]: Math.max(0, this.state[teamScoreNum] - 1),
     });
@@ -53,7 +60,6 @@ class GameCard extends React.Component {
   onSubmitMaxScore(event) {
     if (event.key === 'Enter') {
       const scoreValue = event.target.value;
-      // console.log(scoreValue);
       this.setState({
         maxScore: Number(scoreValue),
       });
@@ -61,8 +67,6 @@ class GameCard extends React.Component {
   }
 
   onTeamNameChange(team, e) {
-    //this needs fixing!!!!!!!!!!!!!!!!!!! figure out how to pass text from parent to child, and back up to parent! --(callback)
-    //create Enter Key condition to display input team name only when Enter key is pressed//
     if (e.key === 'Enter') {
       const { value } = e.target;
 
@@ -73,6 +77,45 @@ class GameCard extends React.Component {
       e.target.value = '';
     }
   }
+
+  onTimerToggle() {
+    if (!this.state.isPaused) {
+      this.timer = setInterval(() => {
+        if (this.state.seconds === 0 && this.state.minutes === 0) {
+          this.setState({
+            seconds: 0,
+            minutes: 0,
+          });
+        } else if (this.state.seconds <= 0) {
+          this.setState((prevState) => ({
+            seconds: 59,
+            minutes: prevState.minutes - 1,
+          }));
+        } else {
+          this.setState({
+            seconds: this.state.seconds - 1,
+          });
+        }
+      }, 1000);
+    }
+    this.setState({
+      isPaused: !this.state.isPaused,
+    });
+    if (this.state.isPaused) {
+      clearInterval(this.timer);
+    }
+  }
+
+  onClickReset() {
+    this.setState({
+      isPaused: false,
+      minutes: DEFAULT_START_TIME.minutes,
+      seconds: DEFAULT_START_TIME.seconds,
+    });
+
+    clearInterval(this.timer);
+  }
+
   ///Modal content within comment slashes///////////////////////
 
   handleCloseModal() {
@@ -85,6 +128,7 @@ class GameCard extends React.Component {
     if (this.state.winner) {
       this.setState({
         winner: null,
+        show: true,
         maxScore: 0,
         score1: 0,
         score2: 0,
@@ -92,12 +136,18 @@ class GameCard extends React.Component {
         team2: 'Guest',
         displayName1: '',
         displayName2: '',
+        isPaused: false,
+        minutes: DEFAULT_START_TIME.minutes,
+        seconds: DEFAULT_START_TIME.seconds,
       });
+      clearInterval(this.timer);
     }
   }
   ///////////////////////////////////////////////////////////////////
 
   render() {
+    const playOrPause = this.state.isPaused === false ? 'Play' : 'Pause';
+
     return (
       <div>
         {this.state.winner ? (
@@ -143,6 +193,31 @@ class GameCard extends React.Component {
             placeholder="Score Limit.."
             onKeyPress={this.onSubmitMaxScore}
           />
+        </div>
+        <div className="timer-container">
+          <div className="time">
+            <h1>
+              {this.state.minutes === 0
+                ? '00'
+                : this.state.minutes < 10
+                ? '0' + this.state.minutes
+                : this.state.minutes}
+              :
+              {this.state.seconds === 0
+                ? '00'
+                : this.state.seconds < 10
+                ? '0' + this.state.seconds
+                : this.state.seconds}
+            </h1>
+          </div>
+          <div className="time-controls">
+            <button className="butn" onClick={this.onTimerToggle}>
+              {playOrPause}
+            </button>
+            <button className="butn" onClick={this.onClickReset}>
+              Reset
+            </button>
+          </div>
         </div>
       </div>
     );
